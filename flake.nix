@@ -26,7 +26,7 @@
               flake8 --max-line-length=120
               mypy -p refactoo  # -p tests
               pylint refactoo  # tests
-              # python3 -m unittest discover -v -s tests/
+              python3 -m unittest discover -v -s tests/
               runHook postCheck
             '';
 
