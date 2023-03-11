@@ -15,45 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import re
 import sys
 import argparse
 
-
-def process_fmt_format(content: str) -> str:
-    replacements = []
-
-    # FIXME: fails when ';' is in the string
-    # FIXME: fails when logging uses a linebreak with '\'
-
-    for match in re.findall(r'log_(?:warning|info|debug|fatal)[^;]*', content, re.MULTILINE):
-        tokens = [x.strip() for x in match.split("<<")]
-        fmttext = ""
-        args = []
-        for token in tokens[1:]:
-            if token.startswith('"') and token.endswith('"'):
-                fmttext += token[1:-1]
-            elif token == "std::endl":
-                pass
-            else:
-                fmttext += "{}"
-                args.append(token)
-
-        argstext = ", ".join(args)
-
-        original = match
-        if argstext == "":
-            replacement = f"{tokens[0]}(\"{fmttext}\")"
-        else:
-            replacement = f"{tokens[0]}(\"{fmttext}\", {argstext})"
-
-        replacements.append((original, replacement))
-
-    newcontent = content
-    for (orig, repl) in replacements:
-        newcontent = newcontent.replace(orig, repl)
-
-    return newcontent
+from refactoo.refactor_log import refactor_log
 
 
 def parse_args():
@@ -72,7 +37,7 @@ def main():
     for filename in opts.files:
         with open(filename, 'r', encoding='utf-8') as fin:
             content = fin.read()
-            newcontent = process_fmt_format(content)
+            newcontent = refactor_log(content)
 
         if opts.in_place:
             with open(filename, 'w', encoding='utf-8') as fout:
