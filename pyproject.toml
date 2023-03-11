@@ -1,0 +1,33 @@
+[build-system]
+requires = [
+    "setuptools >= 42",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "refactoo"
+version = "0.0.0"
+description = "C++ Refactoring Tools"
+authors = [
+  { name = "Ingo Ruhnke", email = "grumbel@gmail.com" }
+]
+
+[tool.setuptools]
+packages = ["refactoo"]
+
+[project.scripts]
+refactoo = "refactoo.cmd_refactoo:main"
+
+[tool.pylint]
+max-line-length = 120
+disable = [
+  "fixme",
+  "missing-module-docstring",
+  "missing-function-docstring",
+]
+
+[tool.flake8]
+max-line-length = 120
+
+# EOF #
