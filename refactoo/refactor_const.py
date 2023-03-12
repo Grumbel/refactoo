@@ -16,28 +16,21 @@
 
 
 import argparse
-import unittest
-
-from refactoo.refactor_log import refactor_log
+from comby import Comby
 
 
-class RefactorLogTestCase(unittest.TestCase):
+def refactor_const(opts: argparse.Namespace, text: str) -> str:
+    comby = Comby()
 
-    def test_refactor_log(self) -> None:
-        test_data = [(
-            r"""
-            log_warning << "Hello World" << std::endl;
-            log_warning << "Hello World: " << 5 << std::endl;
-            """,
-            r"""
-            log_warning("Hello World");
-            log_warning("Hello World: {}", 5);
-            """
-        )]
+    # Move const to the middle
+    text = comby.rewrite(text, "const :[a:e]&", ":[a] const&")
+    text = comby.rewrite(text, "const :[a:e]*", ":[a] const*")
 
-        for source, expected_result in test_data:
-            self.assertEqual(refactor_log(argparse.Namespace(), source),
-                             expected_result)
+    # Cleanup some spaces
+    text = comby.rewrite(text, "const :[a:e] &", ":[a] const&")
+    text = comby.rewrite(text, "const :[a:e] *", ":[a] const*")
+
+    return text
 
 
 # EOF #

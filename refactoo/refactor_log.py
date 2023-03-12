@@ -16,9 +16,10 @@
 
 
 import re
+import argparse
 
 
-def refactor_log(content: str) -> str:
+def refactor_log(opts: argparse.Namespace, content: str) -> str:
     replacements = []
 
     # FIXME: fails when ';' is in the string

@@ -16,28 +16,12 @@
 
 
 import argparse
-import unittest
-
-from refactoo.refactor_log import refactor_log
+import re
 
 
-class RefactorLogTestCase(unittest.TestCase):
-
-    def test_refactor_log(self) -> None:
-        test_data = [(
-            r"""
-            log_warning << "Hello World" << std::endl;
-            log_warning << "Hello World: " << 5 << std::endl;
-            """,
-            r"""
-            log_warning("Hello World");
-            log_warning("Hello World: {}", 5);
-            """
-        )]
-
-        for source, expected_result in test_data:
-            self.assertEqual(refactor_log(argparse.Namespace(), source),
-                             expected_result)
+def refactor_include_guards(opts: argparse.Namespace, text: str) -> str:
+    assert False, "implement me"
+    return text
 
 
 # EOF #

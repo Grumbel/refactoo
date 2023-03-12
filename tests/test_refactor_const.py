@@ -18,25 +18,25 @@
 import argparse
 import unittest
 
-from refactoo.refactor_log import refactor_log
+from refactoo.refactor_const import refactor_const
 
 
-class RefactorLogTestCase(unittest.TestCase):
+class RefactorConstTestCase(unittest.TestCase):
 
-    def test_refactor_log(self) -> None:
+    def test_refactor_const(self) -> None:
         test_data = [(
             r"""
-            log_warning << "Hello World" << std::endl;
-            log_warning << "Hello World: " << 5 << std::endl;
+            void foobar(const Foobar& foo) {}
+            void foobar(const Foobar* foo) {}
             """,
             r"""
-            log_warning("Hello World");
-            log_warning("Hello World: {}", 5);
+            void foobar(Foobar const& foo) {}
+            void foobar(Foobar const* foo) {}
             """
         )]
 
         for source, expected_result in test_data:
-            self.assertEqual(refactor_log(argparse.Namespace(), source),
+            self.assertEqual(refactor_const(argparse.Namespace(), source),
                              expected_result)
 
 

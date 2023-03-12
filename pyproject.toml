@@ -25,6 +25,7 @@ disable = [
   "fixme",
   "missing-module-docstring",
   "missing-function-docstring",
+  "unused-argument"
 ]
 
 [tool.flake8]

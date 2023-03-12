@@ -19,14 +19,30 @@ import sys
 import argparse
 
 from refactoo.refactor_log import refactor_log
+from refactoo.refactor_const import refactor_const
+from refactoo.refactor_include_guards import refactor_include_guards
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Replace log_... with fmt::format')
-    parser.add_argument('files', metavar='FILE', type=str, nargs='+',
-                        help='input files to be processed')
+
     parser.add_argument('--in-place', action='store_true', default=False,
                         help='modify files in-place')
+
+    subparsers = parser.add_subparsers()
+
+    refactor_log_parser = subparsers.add_parser("log")
+    refactor_log_parser.set_defaults(filter_func=refactor_log)
+
+    refactor_const_parser = subparsers.add_parser("const")
+    refactor_const_parser.set_defaults(filter_func=refactor_const)
+
+    refactor_include_guards_parser = subparsers.add_parser("include-guards")
+    refactor_include_guards_parser.add_argument("--project", type=str, required=True)
+    refactor_include_guards_parser.set_defaults(filter_func=refactor_include_guards)
+
+    parser.add_argument('files', metavar='FILE', type=str, nargs='+',
+                        help='input files to be processed')
 
     return parser.parse_args()
 
@@ -37,7 +53,7 @@ def main():
     for filename in opts.files:
         with open(filename, 'r', encoding='utf-8') as fin:
             content = fin.read()
-            newcontent = refactor_log(content)
+            newcontent = opts.filter_func(opts, content)
 
         if opts.in_place:
             with open(filename, 'w', encoding='utf-8') as fout:
