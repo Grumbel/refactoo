@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "comby_src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634052136,
+        "narHash": "sha256-kgpzw3/CfS631PXkcR+2SRfbSA7ASdcMdtSq6PbU/58=",
+        "owner": "ChrisTimperley",
+        "repo": "comby-python",
+        "rev": "22a807d609c2410cef3d3ec8dc87e244db6d39cd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ChrisTimperley",
+        "ref": "v0.3.0",
+        "repo": "comby-python",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1676283394,
@@ -33,6 +50,7 @@
     },
     "root": {
       "inputs": {
+        "comby_src": "comby_src",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs"
       }
