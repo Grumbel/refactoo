@@ -17,6 +17,7 @@
 
 import sys
 import argparse
+import difflib
 
 from refactoo.refactor_log import refactor_log
 from refactoo.refactor_const import refactor_const
@@ -28,6 +29,9 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument('--in-place', action='store_true', default=False,
                         help='modify files in-place')
+
+    parser.add_argument('--diff', action='store_true', default=False,
+                        help='show diff of changes')
 
     subparsers = parser.add_subparsers()
 
@@ -55,7 +59,14 @@ def main():
             content = fin.read()
             newcontent = opts.filter_func(opts, content)
 
-        if opts.in_place:
+        if opts.diff:
+            for difference in difflib.unified_diff(content.splitlines(),
+                                                   newcontent.splitlines(),
+                                                   filename + ".old",
+                                                   filename + ".new"):
+                if difference[0] != " ":
+                    print(difference)
+        elif opts.in_place:
             with open(filename, 'w', encoding='utf-8') as fout:
                 fout.write(newcontent)
         else:
