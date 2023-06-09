@@ -16,7 +16,6 @@
 
 
 import argparse
-import re
 
 
 def refactor_include_guards(opts: argparse.Namespace, text: str) -> str:
