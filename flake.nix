@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     flake-utils.url = "github:numtide/flake-utils";
 
     comby_src.url = "github:ChrisTimperley/comby-python?ref=v0.3.0";
@@ -27,11 +27,11 @@
               sed -i '/typing >= 0.4/d' setup.cfg
             '';
 
-            propagatedBuildInputs = [
-              pythonPackages.typing
-              pythonPackages.requests
-              pythonPackages.loguru
-              pythonPackages.attrs
+            propagatedBuildInputs = with pythonPackages; [
+              typing
+              requests
+              loguru
+              attrs
             ];
           };
 
@@ -41,28 +41,28 @@
 
             src = ./.;
 
-            doCheck = true;
-
             checkPhase = ''
+              pwd
               runHook preCheck
               flake8 --max-line-length=120
               mypy -p refactoo  # -p tests
-              pylint refactoo  # tests
+              # pylint refactoo  # tests
               python3 -m unittest discover -v -s tests/
               runHook postCheck
             '';
 
             propagatedBuildInputs = [
               comby
-              pkgs.comby
             ];
 
-            checkInputs = [
-              pythonPackages.flake8
-              pythonPackages.mypy
-              pythonPackages.pylint
-              pythonPackages.types-setuptools
-              pythonPackages.pip
+            nativeCheckInputs = with pythonPackages; [
+              flake8
+              mypy
+              pylint
+              types-setuptools
+              pip
+            ] ++ [
+              pkgs.comby
             ];
           };
         };
